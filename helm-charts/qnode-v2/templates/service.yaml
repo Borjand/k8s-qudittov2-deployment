@@ -1,0 +1,15 @@
+{{- if .Values.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "q-node.name" . }}
+spec:
+  type: NodePort
+  selector:
+    app: {{ include "q-node.name" . }}
+  ports:
+    - name: etsi014
+      port: {{ .Values.service.nodePortPort }}
+      targetPort: {{ .Values.service.nodePortContainerPort }}
+      nodePort: {{ .Values.service.nodePort }}
+{{- end }}

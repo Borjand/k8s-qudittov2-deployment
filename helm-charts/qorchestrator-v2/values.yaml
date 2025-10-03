@@ -1,0 +1,16 @@
+image:
+  repository: buchillo/qd2-orchestrator
+  tag: "1.0"
+  pullPolicy: Always
+
+placement:
+  nodeSelector: {}
+  useNodeName: true
+  nodeName: ""
+
+l2sm:
+  enabled: true
+  networkName: ""
+  ip: ""
+
+

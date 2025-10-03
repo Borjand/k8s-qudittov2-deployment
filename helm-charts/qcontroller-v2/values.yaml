@@ -1,0 +1,23 @@
+
+qcontrollerName: ""
+
+image:
+  repository: buchillo/qd2-controller
+  tag: "1.0"
+  pullPolicy: Always
+
+placement:
+  nodeSelector: {}
+  useNodeName: true
+  nodeName: ""
+
+l2sm:
+  enabled: true
+  networkName: ""
+  ip: ""
+
+
+service:
+  enabled: false
+  headless: false   # ClusterIP: None (DNS directo al Pod desde dentro del cluster)
+  port: 22

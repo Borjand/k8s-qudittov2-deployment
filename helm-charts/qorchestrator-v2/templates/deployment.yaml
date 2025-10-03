@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qorchestrator-v2.name" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "qorchestrator-v2.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "qorchestrator-v2.name" . }}
+        {{- if .Values.l2sm.enabled }}
+        l2sm: "true"
+        {{- end }}
+      annotations:
+        {{- if and .Values.l2sm.enabled .Values.l2sm.networkName .Values.l2sm.ip }}
+        l2sm/networks: |
+          [ { "name": "{{ .Values.l2sm.networkName }}", "ips": [ "{{ .Values.l2sm.ip }}" ] } ]
+        {{- end }}
+    spec:
+      {{- if and .Values.placement.useNodeName .Values.placement.nodeName }}
+      nodeName: {{ .Values.placement.nodeName | quote }}
+      {{- else if .Values.placement.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.placement.nodeSelector | indent 8 }}
+      {{- end }}
+      containers:
+        - name: qorchestrator-v2
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            capabilities:
+              add: ["NET_ADMIN", "NET_RAW"]
