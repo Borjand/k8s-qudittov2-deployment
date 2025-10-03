@@ -1,0 +1,16 @@
+{{- if .Values.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "q-controller.name" . }}
+spec:
+  {{- if .Values.service.headless }}
+  clusterIP: None
+  {{- end }}
+  selector:
+    app: {{ include "q-controller.name" . }}
+  ports:
+    - name: ssh
+      port: {{ .Values.service.port }}
+      targetPort: 22
+{{- end }}
