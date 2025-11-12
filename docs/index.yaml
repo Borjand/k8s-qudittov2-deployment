@@ -1,0 +1,36 @@
+apiVersion: v1
+entries:
+  qcontroller-v2:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-11-12T11:25:44.929122328Z"
+    description: A Helm chart for deploying Quditto v2 controller on Kubernetes
+    digest: 9fa23b8feaaff1cbacf9c01202ff4f083e481688f8024d91f017538d711caafe
+    name: qcontroller-v2
+    type: application
+    urls:
+    - https://borjand.github.io/k8s-qudittov2-deployment/qcontroller-v2-0.1.0.tgz
+    version: 0.1.0
+  qnode-v2:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-11-12T11:25:44.929431181Z"
+    description: A Helm chart for deploying Quditto v2 nodes on Kubernetes
+    digest: 6e8649e49fa73b58223fa04499ac6613bcca9672bb4ba92f94b168d866b2c10b
+    name: qnode-v2
+    type: application
+    urls:
+    - https://borjand.github.io/k8s-qudittov2-deployment/qnode-v2-0.1.0.tgz
+    version: 0.1.0
+  qorchestrator-v2:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-11-12T11:25:44.929816672Z"
+    description: A Helm chart for deploying Quditto v2 orchestrator on Kubernetes
+    digest: f8faff944eba08c79fc7e0b65b727c13a63919de4d83c186f876e50b57a25fa0
+    name: qorchestrator-v2
+    type: application
+    urls:
+    - https://borjand.github.io/k8s-qudittov2-deployment/qorchestrator-v2-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-11-12T11:25:44.928518324Z"

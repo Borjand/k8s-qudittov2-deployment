@@ -1,6 +1,6 @@
 image:
   repository: buchillo/qd2-orchestrator
-  tag: "1.0"
+  tag: "1.1.0"
   pullPolicy: Always
 
 placement:
