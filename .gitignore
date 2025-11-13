@@ -1,71 +1,15 @@
-# --- Python / build / venvs ---
+# Python
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-*.so
-*.dll
 *.egg-info/
-dist/
-build/
-.eggs/
+*.egg
+
+# Entornos virtuales
+venv/
 .venv/
-.venv*/
 env/
-pip-wheel-metadata/
-.pytest_cache/
-.coverage*
-htmlcov/
-.mypy_cache/
-.pytype/
-ruff_cache/
+.env/
 
-# --- IDE / OS ---
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-
-# --- QD2 Bootstrap artifacts ---
-# kubeconfigs guardados por nuestra CLI
-clusters/*/kubeconfig
-# kubeconfig sueltos creados por kubeone en CWD
-*-kubeconfig
+# Archivos sensibles / kubeconfigs
 *.kubeconfig
-
-# manifiestos temporales de kubeone
-k1-*.yaml
-k1-reset-*.yaml
-
-# logs y tmp
-tmp/
-*.log
-
-# --- Terraform ---
-.tf-build/
-**/.terraform/
-*.tfstate
-*.tfstate.*
-
-crash.log
-crash.*.log
-override.tf
-override.tf.json
-*_override.tf
-*_override.tf.json
-
-# Si quieres versionar el lockfile de Terraform, descomenta la línea siguiente:
-#!.terraform.lock.hcl
-
-# --- Helm ---
-**/Chart.lock
-**/*.tgz
-
-# --- Secrets / claves ---
-*.pem
-*.key
-*.crt
-*.pub
-*.env
-.env*
-secrets*.yaml
+qd2_bootstrap_cli/clusters/*/kubeconfig
