@@ -84,6 +84,8 @@ def up(
     provision_infra: Path = typer.Option(None, "--provision-infra", help="Infra spec YAML to provision VMs before KubeOne"),
     wait_ssh: bool = typer.Option(True, "--wait-ssh/--no-wait-ssh", help="Wait for SSH on all nodes before applying KubeOne"),
     ssh_timeout: int = typer.Option(300, "--ssh-timeout", help="Max seconds to wait for SSH readiness"),
+    post_status: bool = typer.Option(True, "--post-status/--no-post-status", help="Show nodes and kube-system pods after apply"),
+
 ):
     """
     Apply the cluster with KubeOne.
@@ -174,12 +176,32 @@ def up(
 
     # Save kubeconfig
     outdir = kubeconfig_outdir or (Path("./clusters") / s.name)
+    saved_kc = None  # <-- inicializamos aquí
+
     try:
-        saved = _save_kubeconfig(cluster_name=s.name, src_dir=cwd, outdir=outdir)
-        rprint(f"[green]Kubeconfig saved:[/] {saved}")
-        rprint(f"  export KUBECONFIG={saved}")
+        saved_kc = _save_kubeconfig(cluster_name=s.name, src_dir=cwd, outdir=outdir)
+        rprint(f"[green]Kubeconfig saved:[/] {saved_kc}")
+        rprint(f"  export KUBECONFIG={saved_kc}")
     except FileNotFoundError as e:
         rprint(f"[yellow]Warning:[/] {e}")
+        # Fallback: intenta usar el kubeconfig que KubeOne dejó en CWD
+        kc_cwd = _expected_kubeone_kubeconfig(s.name, cwd)
+        if kc_cwd.exists():
+            saved_kc = kc_cwd
+            rprint(f"[yellow]Using kubeconfig from current directory:[/] {kc_cwd}")
+        else:
+            rprint("[red]No kubeconfig found after KubeOne apply.[/]")
+
+    # Post status (nodes + kube-system pods)
+    if post_status and saved_kc:
+        try:
+            from qd2_bootstrap.utils.kubectl import Kubectl
+            rprint("\n[bold cyan]Cluster status after apply[/]")
+            kube = Kubectl(kubeconfig=saved_kc)
+            kube.get_nodes()
+            kube.get_core_health()
+        except Exception as e:
+            rprint(f"[yellow]Could not fetch post-apply status:[/] {e}")
 
 
 # -------------
