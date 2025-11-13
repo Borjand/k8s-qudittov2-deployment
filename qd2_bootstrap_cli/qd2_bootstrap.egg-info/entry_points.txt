@@ -1,2 +1,0 @@
-[console_scripts]
-qd2_bootstrap = qd2_bootstrap.cli:run
