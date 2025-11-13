@@ -12,6 +12,7 @@ env/
 
 # Archivos sensibles / kubeconfigs
 *.kubeconfig
+*kubeconfig
 qd2_bootstrap_cli/clusters/*/kubeconfig
 
 # --- Terraform (workdir generado por la CLI) ---
