@@ -13,3 +13,18 @@ env/
 # Archivos sensibles / kubeconfigs
 *.kubeconfig
 qd2_bootstrap_cli/clusters/*/kubeconfig
+
+# --- Terraform (workdir generado por la CLI) ---
+*.tf-build/
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Mantén el lockfile (es bueno versionarlo)
+*.terraform.lock.hcl
