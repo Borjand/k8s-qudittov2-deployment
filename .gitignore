@@ -14,6 +14,10 @@ env/
 *.kubeconfig
 *kubeconfig
 qd2_bootstrap_cli/clusters/*/kubeconfig
+cluster-infra-dep.yaml
+cluster-test-deployment.yaml
+infra-test-deployment.yaml
+test-deploy-quditto.yaml
 
 # --- Terraform (workdir generado por la CLI) ---
 *.tf-build/
