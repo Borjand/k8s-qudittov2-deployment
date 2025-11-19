@@ -1,18 +1,33 @@
-# Mapping helpers that turn domain params into chart values.
+# qd2_bootstrap/utils/mapping.py
+from __future__ import annotations
 
-def values_from_params(nodek8s: str) -> dict:
+from typing import Dict, Any
+from qd2_bootstrap.utils.merge import deep_merge
+
+def map_component_values(user_values: Dict[str, Any] | None, node_name: str) -> Dict[str, Any]:
     """
-    Convert domain-level placement (nodek8s) into the Helm values shape expected by your charts.
-    You requested the following structure:
+    Build the final Helm values for a component.
+
+    - Injects placement knobs derived from the target node (`node_name`).
+    - Deep-merges user-provided overrides on top.
+
+    Charts convention assumed:
       placement:
-        nodeSelector: {}
         useNodeName: true
-        nodeName: "<nodek8s>"
+        nodeName: "<node>"
+        nodeSelector: {}     # (optional/ignored if useNodeName=true)
+
+    Args:
+      user_values: dict with user overrides (can be None).
+      node_name: Kubernetes nodeName where we want to pin the workload.
+
+    Returns:
+      A dict with the merged values, suitable to serialize to --set.
     """
-    return {
+    base: Dict[str, Any] = {
         "placement": {
-            "nodeSelector": {},
             "useNodeName": True,
-            "nodeName": nodek8s,
+            "nodeName": node_name,
         }
     }
+    return deep_merge(base, user_values or {})
