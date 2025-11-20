@@ -23,18 +23,18 @@ spec:
           {{- end }}
           ]
         {{- end }}
-        #{{- if and .Values.l2sm.enabled .Values.l2sm.networkName .Values.l2sm.ip }}
-        #l2sm/networks: |
-        #  [ { "name": "{{ .Values.l2sm.networkName }}", "ips": [ "{{ .Values.l2sm.ip }}" ] } ]
-        #{{- end }}
     spec:
       {{- if and .Values.placement.useNodeName .Values.placement.nodeName }}
+      # Fixed node placement using nodeName
       nodeName: {{ .Values.placement.nodeName | quote }}
       {{- else if .Values.placement.nodeSelector }}
+      # Node placement using nodeSelector
       nodeSelector:
 {{ toYaml .Values.placement.nodeSelector | indent 8 }}
       {{- end }}
       containers:
+        # QKD container: deployed when typeNode is "qkd" or "hybrid"
+        {{- if or (eq .Values.typeNode "qkd") (eq .Values.typeNode "hybrid") }}
         - name: {{ include "q-node.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -44,3 +44,31 @@ spec:
           ports:
             - containerPort: {{ .Values.service.nodePortContainerPort }}
               name: etsi014
+        {{- end }}
+
+        # PQC containers: deployed when typeNode is "pqc" or "hybrid"
+        {{- if or (eq .Values.typeNode "pqc") (eq .Values.typeNode "hybrid") }}
+        - name: http-receiver
+          image: "{{ .Values.pqc.httpReceiver.image.repository }}:{{ .Values.pqc.httpReceiver.image.tag }}"
+          imagePullPolicy: {{ .Values.pqc.httpReceiver.image.pullPolicy }}
+          command: ["sh", "-c", "sleep infinity"]
+
+        - name: vault
+          image: "{{ .Values.pqc.vault.image.repository }}:{{ .Values.pqc.vault.image.tag }}"
+          imagePullPolicy: {{ .Values.pqc.vault.image.pullPolicy }}
+          command: ["sh", "-c", "sleep infinity"]
+
+        - name: pqc-server
+          image: "{{ .Values.pqc.server.image.repository }}:{{ .Values.pqc.server.image.tag }}"
+          imagePullPolicy: {{ .Values.pqc.server.image.pullPolicy }}
+          command: ["sh", "-c", "sleep infinity"]
+
+        - name: pqc-client
+          image: "{{ .Values.pqc.client.image.repository }}:{{ .Values.pqc.client.image.tag }}"
+          imagePullPolicy: {{ .Values.pqc.client.image.pullPolicy }}
+          command: ["sh", "-c", "sleep infinity"]
+        {{- end }}
+
+        {{- if and (ne .Values.typeNode "qkd") (ne .Values.typeNode "pqc") (ne .Values.typeNode "hybrid") }}
+        {{- fail (printf "Invalid typeNode value: %s. Allowed: qkd, pqc, hybrid." .Values.typeNode) }}
+        {{- end }}

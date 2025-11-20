@@ -1,26 +1,62 @@
-# Default values for qnode-v2.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# Type of node to deploy: qkd | pqc | hybrid
+typeNode: hybrid
 
+# Optional name override for the deployment
 qnodeName: ""
 
-# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+# Main image used for QKD mode or hybrid mode
 image:
   repository: buchillo/qd2-node
   tag: "1.1.0"
   pullPolicy: Always
 
+# PQC components configuration
+pqc:
+  # HTTP receiver component
+  httpReceiver:
+    image:
+      repository: alpine           # TODO: replace with real image
+      tag: "3.20"
+      pullPolicy: IfNotPresent
+
+  # Vault component
+  vault:
+    image:
+      repository: alpine           # TODO: replace with real image
+      tag: "3.20"
+      pullPolicy: IfNotPresent
+
+  # PQC server component
+  server:
+    image:
+      repository: alpine           # TODO: replace with real image
+      tag: "3.20"
+      pullPolicy: IfNotPresent
+
+  # PQC client component
+  client:
+    image:
+      repository: alpine           # TODO: replace with real image
+      tag: "3.20"
+      pullPolicy: IfNotPresent
+
+# NodePort service configuration
 service:
-  enabled: false
-  nodePortContainerPort: 8000     # puerto dentro del contenedor
-  nodePortPort: 8000              # puerto lógico del Service
-  nodePort: 30080                 # puerto fijo en los nodos (rango permitido: 30000-32767)
+  enabled: false                     # Whether to create a NodePort service
+  nodePortContainerPort: 8000        # Port exposed inside the container
+  nodePortPort: 8000                 # Service port
+  nodePort: 30080                    # Fixed NodePort (range 30000–32767)
 
+# Pod placement configuration
 placement:
-  useNodeName: true
-  nodeName: ""
-  nodeSelector: {}
+  useNodeName: true                  # If true, schedule pod on a specific node
+  nodeName: ""                       # Name of the node to schedule on
+  nodeSelector: {}                   # Optional nodeSelector instead of nodeName
 
+# L2SM annotation support
 l2sm:
-  enabled: true
-  networks: []          # lista vacía → Parametros de la lista: l2sm.networks[x].name; l2sm.networks[X].ip       
+  enabled: false                      # Whether L2SM annotations should be added
+  networks: []                       # List of network entries (name, ip)
+                                     # Example:
+                                     # - name: mynet
+                                     #   ip: 192.168.1.10
