@@ -18,6 +18,9 @@ l2sm:
 
 
 service:
-  enabled: false
-  headless: false   # ClusterIP: None (DNS directo al Pod desde dentro del cluster)
-  port: 22
+  enabled: true
+  ports:
+    - name: ssh
+      port: 22
+      targetPort: 22
+      # nodePort: (optional)

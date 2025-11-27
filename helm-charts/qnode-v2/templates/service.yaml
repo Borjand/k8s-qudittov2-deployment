@@ -8,8 +8,12 @@ spec:
   selector:
     app: {{ include "q-node.name" . }}
   ports:
-    - name: etsi014
-      port: {{ .Values.service.nodePortPort }}
-      targetPort: {{ .Values.service.nodePortContainerPort }}
-      nodePort: {{ .Values.service.nodePort }}
+  {{- range .Values.service.ports }}
+    - name: {{ .name }}
+      port: {{ .port }}
+      targetPort: {{ .targetPort | default .port }}
+      {{- if .nodePort }}
+      nodePort: {{ .nodePort }}
+      {{- end }}
+  {{- end }}
 {{- end }}

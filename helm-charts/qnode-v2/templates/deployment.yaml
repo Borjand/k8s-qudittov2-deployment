@@ -33,42 +33,16 @@ spec:
 {{ toYaml .Values.placement.nodeSelector | indent 8 }}
       {{- end }}
       containers:
-        # QKD container: deployed when typeNode is "qkd" or "hybrid"
-        {{- if or (eq .Values.typeNode "qkd") (eq .Values.typeNode "hybrid") }}
         - name: {{ include "q-node.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           securityContext:
             capabilities:
               add: ["NET_ADMIN", "NET_RAW"]
-          ports:
-            - containerPort: {{ .Values.service.nodePortContainerPort }}
-              name: etsi014
-        {{- end }}
-
-        # PQC containers: deployed when typeNode is "pqc" or "hybrid"
-        {{- if or (eq .Values.typeNode "pqc") (eq .Values.typeNode "hybrid") }}
-        - name: http-receiver
-          image: "{{ .Values.pqc.httpReceiver.image.repository }}:{{ .Values.pqc.httpReceiver.image.tag }}"
-          imagePullPolicy: {{ .Values.pqc.httpReceiver.image.pullPolicy }}
-          command: ["sh", "-c", "sleep infinity"]
-
-        - name: vault
-          image: "{{ .Values.pqc.vault.image.repository }}:{{ .Values.pqc.vault.image.tag }}"
-          imagePullPolicy: {{ .Values.pqc.vault.image.pullPolicy }}
-          command: ["sh", "-c", "sleep infinity"]
-
-        - name: pqc-server
-          image: "{{ .Values.pqc.server.image.repository }}:{{ .Values.pqc.server.image.tag }}"
-          imagePullPolicy: {{ .Values.pqc.server.image.pullPolicy }}
-          command: ["sh", "-c", "sleep infinity"]
-
-        - name: pqc-client
-          image: "{{ .Values.pqc.client.image.repository }}:{{ .Values.pqc.client.image.tag }}"
-          imagePullPolicy: {{ .Values.pqc.client.image.pullPolicy }}
-          command: ["sh", "-c", "sleep infinity"]
-        {{- end }}
-
-        {{- if and (ne .Values.typeNode "qkd") (ne .Values.typeNode "pqc") (ne .Values.typeNode "hybrid") }}
-        {{- fail (printf "Invalid typeNode value: %s. Allowed: qkd, pqc, hybrid." .Values.typeNode) }}
-        {{- end }}
+          # {{- if and .Values.service.enabled .Values.service.ports }}
+          # ports:
+          #   {{- range .Values.service.ports }}
+          #   - name: {{ .name }}
+          #     containerPort: {{ .targetPort | default .port }}
+          #   {{- end }}
+          # {{- end }}

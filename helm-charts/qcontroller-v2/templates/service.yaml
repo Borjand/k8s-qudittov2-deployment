@@ -4,13 +4,16 @@ kind: Service
 metadata:
   name: {{ include "q-controller.name" . }}
 spec:
-  {{- if .Values.service.headless }}
-  clusterIP: None
-  {{- end }}
+  type: NodePort
   selector:
     app: {{ include "q-controller.name" . }}
   ports:
-    - name: ssh
-      port: {{ .Values.service.port }}
-      targetPort: 22
+  {{- range .Values.service.ports }}
+    - name: {{ .name }}
+      port: {{ .port }}
+      targetPort: {{ .targetPort | default .port }}
+      {{- if .nodePort }}
+      nodePort: {{ .nodePort }}
+      {{- end }}
+  {{- end }}
 {{- end }}

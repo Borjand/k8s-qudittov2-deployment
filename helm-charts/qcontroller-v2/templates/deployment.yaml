@@ -30,9 +30,13 @@ spec:
         - name: {{ include "q-controller.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - containerPort: 22
-              name: ssh
           securityContext:
             capabilities:
               add: ["NET_ADMIN", "NET_RAW"]
+          # {{- if and .Values.service.enabled .Values.service.ports }}
+          # ports:
+          #   {{- range .Values.service.ports }}
+          #   - name: {{ .name }}
+          #     containerPort: {{ .targetPort | default .port }}
+          #   {{- end }}
+          # {{- end }}

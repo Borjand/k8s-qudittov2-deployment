@@ -1,6 +1,3 @@
-# Type of node to deploy: qkd | pqc | hybrid
-typeNode: hybrid
-
 # Optional name override for the deployment
 qnodeName: ""
 
@@ -10,42 +7,18 @@ image:
   tag: "1.1.0"
   pullPolicy: Always
 
-# PQC components configuration
-pqc:
-  # HTTP receiver component
-  httpReceiver:
-    image:
-      repository: alpine           # TODO: replace with real image
-      tag: "3.20"
-      pullPolicy: IfNotPresent
-
-  # Vault component
-  vault:
-    image:
-      repository: alpine           # TODO: replace with real image
-      tag: "3.20"
-      pullPolicy: IfNotPresent
-
-  # PQC server component
-  server:
-    image:
-      repository: alpine           # TODO: replace with real image
-      tag: "3.20"
-      pullPolicy: IfNotPresent
-
-  # PQC client component
-  client:
-    image:
-      repository: alpine           # TODO: replace with real image
-      tag: "3.20"
-      pullPolicy: IfNotPresent
-
-# NodePort service configuration
+# NodePort service configuration [List]
 service:
-  enabled: false                     # Whether to create a NodePort service
-  nodePortContainerPort: 8000        # Port exposed inside the container
-  nodePortPort: 8000                 # Service port
-  nodePort: 30080                    # Fixed NodePort (range 30000–32767)
+  enabled: true
+  ports:
+    - name: etsi014
+      port: 8000        
+      targetPort: 8000  
+      # nodePort: (optional)
+    - name: ssh
+      port: 22
+      targetPort: 22
+      # nodePort: (optional)
 
 # Pod placement configuration
 placement:
@@ -55,8 +28,8 @@ placement:
 
 # L2SM annotation support
 l2sm:
-  enabled: false                      # Whether L2SM annotations should be added
+  enabled: false                     # Whether L2SM annotations should be added
   networks: []                       # List of network entries (name, ip)
                                      # Example:
                                      # - name: mynet
-                                     #   ip: 192.168.1.10
+                                     #   ip: 192.168.1.10/30
