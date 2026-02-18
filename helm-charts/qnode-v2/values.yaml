@@ -3,9 +3,9 @@ qnodeName: ""
 
 # Main image used for QKD mode or hybrid mode
 image:
-  repository: buchillo/qd2-node
-  tag: "1.1.0"
-  pullPolicy: Always
+  repository: pinqituc3m/qd2-node
+  tag: "latest"
+  pullPolicy: IfNotPresent
 
 # NodePort service configuration [List]
 service:

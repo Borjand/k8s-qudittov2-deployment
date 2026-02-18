@@ -2,9 +2,9 @@
 qcontrollerName: ""
 
 image:
-  repository: buchillo/qd2-controller
-  tag: "1.1.0"
-  pullPolicy: Always
+  repository: pinqituc3m/qd2-controller
+  tag: "latest"
+  pullPolicy: IfNotPresent
 
 placement:
   nodeSelector: {}
